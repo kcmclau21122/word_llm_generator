@@ -1,0 +1,218 @@
+# ===================================
+# Python
+# ===================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+*.pyo
+*.pyd
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ===================================
+# Virtual Environments (DO NOT COMMIT)
+# ===================================
+venv/
+env/
+ENV/
+.venv/
+.env.local/
+virtualenv/
+
+# ===================================
+# IDE and Editors
+# ===================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ===================================
+# Logs (DO NOT COMMIT)
+# ===================================
+logs/
+*.log
+*.log.*
+*.out
+
+# ===================================
+# Output Files (DO NOT COMMIT)
+# ===================================
+output/
+*.docx
+!templates/*.docx
+
+# ===================================
+# Environment Variables and Secrets
+# ===================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.crt
+
+# ===================================
+# Configuration Backups
+# ===================================
+config.json.backup
+config.json.bak
+config.*.json
+!config.json
+
+# ===================================
+# OS Specific
+# ===================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# ===================================
+# Temporary Files
+# ===================================
+*.tmp
+*.temp
+*.bak
+*.swp
+temp/
+tmp/
+cache/
+
+# ===================================
+# Testing and Coverage
+# ===================================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ===================================
+# Jupyter Notebook
+# ===================================
+.ipynb_checkpoints
+*.ipynb
+
+# ===================================
+# PyInstaller
+# ===================================
+*.manifest
+*.spec
+
+# ===================================
+# Streamlit
+# ===================================
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# ===================================
+# GPU and CUDA
+# ===================================
+*.cu.o
+*.ptx
+
+# ===================================
+# Project Specific
+# ===================================
+# User uploaded documents (keep templates)
+uploads/
+templates/*.docx
+!templates/.gitkeep
+
+# Generated documents
+generated_*.docx
+*_output.docx
+*_final.docx
+
+# Test files
+test_*.docx
+sample_*.docx
+
+# ===================================
+# Database files (if added later)
+# ===================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ===================================
+# Miscellaneous
+# ===================================
+.vscode-test
+node_modules/
+*.code-workspace

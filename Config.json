@@ -1,0 +1,27 @@
+{
+  "llm_provider": "ollama",
+  "ollama": {
+    "base_url": "http://localhost:11434",
+    "model": "deepseek-r1:7b",
+    "timeout": 120
+  },
+  "openai": {
+    "api_key": "YOUR_OPENAI_API_KEY_HERE",
+    "model": "gpt-4o-mini",
+    "organization": null
+  },
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 2000,
+    "top_p": 0.9
+  },
+  "document": {
+    "section_heading_styles": ["Heading 1", "Heading 2", "Heading 3"],
+    "placeholder_pattern": "{{SECTION_CONTENT}}"
+  },
+  "logging": {
+    "level": "INFO",
+    "rotation_hours": 1,
+    "retention_days": 1
+  }
+}
