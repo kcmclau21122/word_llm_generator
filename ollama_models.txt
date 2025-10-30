@@ -1,0 +1,13 @@
+(venv) PS C:\Users\mclau\source\repos\word_llm_generator> ollama list
+NAME                        ID              SIZE      MODIFIED       
+deepseek-r1:7b              755ced02ce7b    4.7 GB    54 seconds ago
+deepseek-coder:33b          acec7c0b0fd9    18 GB     19 hours ago
+docgen:latest               1a7c222fd2df    18 GB     8 days ago
+mistral:7b                  6577803aa9a0    4.4 GB    9 days ago
+deepseek-v3.1:671b-cloud    d3749919e45f    -         3 weeks ago
+llama3.2:latest             a80c4f17acd5    2.0 GB    3 weeks ago
+mxbai-embed-large:latest    468836162de7    669 MB    12 months ago
+nomic-embed-text:latest     0a109f422b47    274 MB    12 months ago
+all-minilm:latest           1b226e2802db    45 MB     12 months ago
+llama2:latest               78e26419b446    3.8 GB    12 months ago
+(venv) PS C:\Users\mclau\source\repos\word_llm_generator> 

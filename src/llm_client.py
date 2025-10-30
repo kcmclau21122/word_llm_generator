@@ -191,11 +191,10 @@ class LLMClient:
         """
         url = f"{self.base_url}/api/chat"
         
+        # Build messages array
         messages = []
-        
         if system_message:
             messages.append({"role": "system", "content": system_message})
-        
         messages.append({"role": "user", "content": prompt})
         
         payload = {
@@ -248,4 +247,3 @@ class LLMClient:
         except Exception as e:
             self.logger.error(f"Connection test failed: {str(e)}")
             return False
-        
