@@ -220,6 +220,9 @@ def main_interface():
             col2.metric("Sections with Placeholders", len(sections_with_placeholders))
             col3.metric("Tables", len(doc.tables))
             
+            # Title page section
+            show_title_page_editor()
+            
             if sections_with_placeholders:
                 process_sections()
             else:
@@ -228,6 +231,92 @@ def main_interface():
         except Exception as e:
             logger.error(f"Failed to process document: {str(e)}")
             st.error(f"Failed to process document: {str(e)}")
+
+
+def show_title_page_editor():
+    """
+    Show title page editor for populating document metadata fields.
+    """
+    st.header("🎯 Title Page / Document Metadata")
+    
+    with st.expander("Edit Document Metadata", expanded=False):
+        st.markdown("Fill in these fields to replace placeholders in your document title page:")
+        
+        # Initialize metadata in session state
+        if "metadata" not in st.session_state:
+            st.session_state.metadata = {}
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            doc_date = st.text_input(
+                "Document Date",
+                value=st.session_state.metadata.get("DOCUMENT_DATE", ""),
+                placeholder="e.g., October 31, 2025",
+                key="doc_date_input"
+            )
+            st.session_state.metadata["DOCUMENT_DATE"] = doc_date
+            
+            doc_version = st.text_input(
+                "Document Version",
+                value=st.session_state.metadata.get("DOCUMENT_VERSION", ""),
+                placeholder="e.g., 1.0",
+                key="doc_version_input"
+            )
+            st.session_state.metadata["DOCUMENT_VERSION"] = doc_version
+            
+            doc_title = st.text_input(
+                "Document Title",
+                value=st.session_state.metadata.get("DOCUMENT_TITLE", ""),
+                placeholder="e.g., Project Plan",
+                key="doc_title_input"
+            )
+            st.session_state.metadata["DOCUMENT_TITLE"] = doc_title
+        
+        with col2:
+            doc_author = st.text_input(
+                "Author",
+                value=st.session_state.metadata.get("DOCUMENT_AUTHOR", ""),
+                placeholder="e.g., John Doe",
+                key="doc_author_input"
+            )
+            st.session_state.metadata["DOCUMENT_AUTHOR"] = doc_author
+            
+            doc_company = st.text_input(
+                "Company/Organization",
+                value=st.session_state.metadata.get("DOCUMENT_COMPANY", ""),
+                placeholder="e.g., ABC Corporation",
+                key="doc_company_input"
+            )
+            st.session_state.metadata["DOCUMENT_COMPANY"] = doc_company
+            
+            doc_status = st.selectbox(
+                "Status",
+                ["Draft", "Final", "Review", "Approved"],
+                index=0,
+                key="doc_status_input"
+            )
+            st.session_state.metadata["DOCUMENT_STATUS"] = doc_status
+        
+        # Add custom fields
+        st.subheader("Custom Fields")
+        st.markdown("Add additional placeholder replacements (one per line in format: PLACEHOLDER_NAME=value)")
+        
+        custom_fields = st.text_area(
+            "Custom fields",
+            value=st.session_state.metadata.get("_custom_fields_raw", ""),
+            height=100,
+            placeholder="PROJECT_ID=PRJ-2025-001\nDEPARTMENT=Engineering",
+            key="custom_fields_input"
+        )
+        st.session_state.metadata["_custom_fields_raw"] = custom_fields
+        
+        # Parse custom fields
+        if custom_fields:
+            for line in custom_fields.split("\n"):
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    st.session_state.metadata[key.strip()] = value.strip()
 
 
 def process_sections():
@@ -298,7 +387,7 @@ def process_sections():
                                 section
                             )
                             
-                            # Build prompt
+                            # Build prompt with instructions to not repeat section title
                             system_msg, user_prompt = st.session_state.prompt_builder.build_section_prompt(
                                 section=section,
                                 user_notes=user_notes,
@@ -320,6 +409,7 @@ def process_sections():
                             
                             logger.info(f"Content generated for section: {section.title}")
                             st.success("✅ Content generated successfully!")
+                            st.rerun()
                             
                         except Exception as e:
                             logger.error(f"Generation failed for section {section.title}: {str(e)}")
@@ -379,6 +469,20 @@ def finalize_document(process_tables: bool, output_name: str):
     
     logger.info("Finalizing document...")
     
+    # Replace metadata placeholders first
+    if "metadata" in st.session_state:
+        metadata_map = {}
+        for key, value in st.session_state.metadata.items():
+            if not key.startswith("_") and value:  # Skip internal keys and empty values
+                placeholder = f"{{{{{key}}}}}"
+                metadata_map[placeholder] = value
+        
+        if metadata_map:
+            metadata_replacements = st.session_state.content_inserter.replace_all_placeholders(
+                doc, metadata_map
+            )
+            logger.info(f"Replaced {metadata_replacements} metadata placeholder(s)")
+    
     # Insert generated content
     insertion_count = 0
     for section in sections_with_placeholders:
@@ -393,6 +497,7 @@ def finalize_document(process_tables: bool, output_name: str):
     logger.info(f"Inserted content for {insertion_count} section(s)")
     
     # Process tables if requested
+    calc_count = 0
     if process_tables and doc.tables:
         calc_count = st.session_state.table_calculator.process_all_tables(doc)
         logger.info(f"Performed {calc_count} table calculation(s)")

@@ -80,7 +80,15 @@ Your task is to generate clear, well-structured content that:
 - Uses proper grammar, spelling, and formatting
 - Avoids repetition and filler content
 
-Generate only the section content itself, without adding headers, titles, or meta-commentary."""
+CRITICAL FORMATTING RULES:
+- Do NOT include the section heading in your response (it's already in the document)
+- Do NOT start with "# Section Title" or any header
+- When creating lists, use proper bullet points (starting lines with "- " for unordered or "1. " for ordered)
+- Do NOT use markdown bold in lists like "- **item**" - just use "- item" for clean bullets
+- Write clear, readable paragraphs that flow naturally
+- For multi-item lists, each item should be on its own line starting with a bullet or number
+
+Generate only the section content itself, without adding section titles, headers, or meta-commentary. Start immediately with the content."""
         
         return system_message
     
@@ -109,8 +117,9 @@ Generate only the section content itself, without adding headers, titles, or met
         if document_context:
             prompt_parts.append(f"DOCUMENT CONTEXT:\n{document_context}\n")
         
-        # Section information
-        prompt_parts.append(f"SECTION TO WRITE:\nTitle: {section.title}\nLevel: {section.level}\n")
+        # Section information - DO NOT include title in output instructions
+        prompt_parts.append(f"YOU ARE WRITING CONTENT FOR:\n'{section.title}' (Level {section.level} section)\n")
+        prompt_parts.append("IMPORTANT: Do NOT repeat this section title in your output. The title is already in the document.\n")
         
         # Existing content (description)
         if section.content_paragraphs:
@@ -128,8 +137,8 @@ Generate only the section content itself, without adding headers, titles, or met
         # Generation instruction
         prompt_parts.append(
             "Please generate content for this section that incorporates the above requirements "
-            "and flows naturally with the document context. Write the content directly without "
-            "adding section headers or labels."
+            "and flows naturally with the document context. Write the content directly WITHOUT "
+            "adding the section header or title. Start immediately with the first paragraph or list item."
         )
         
         return "\n".join(prompt_parts)
@@ -161,8 +170,9 @@ Your task is to revise the provided content based on specific feedback while:
 - Preserving the professional tone
 - Improving clarity and conciseness
 - Ensuring coherent transitions
+- Using proper bullet points (not bold markdown in lists)
 
-Provide only the revised content without meta-commentary."""
+Provide only the revised content without meta-commentary or section headers."""
         
         user_prompt = f"""SECTION: {section_title}
 
@@ -172,7 +182,7 @@ ORIGINAL CONTENT:
 REFINEMENT REQUIREMENTS:
 {refinement_notes}
 
-Please revise the content based on these requirements."""
+Please revise the content based on these requirements. Do not include the section title in your response."""
         
         return system_message, user_prompt
     

@@ -72,8 +72,9 @@ class ContentInserter:
             # Get the style of the paragraph for formatting consistency
             original_style = placeholder_para.style
             
-            # Split content into paragraphs
-            content_paragraphs = self._split_into_paragraphs(generated_content)
+            # Clean and split content into paragraphs
+            cleaned_content = self._clean_generated_content(generated_content, section.title)
+            content_paragraphs = self._split_into_paragraphs(cleaned_content)
             
             # Replace placeholder text or insert after
             if preserve_placeholder:
@@ -95,6 +96,46 @@ class ContentInserter:
         except Exception as e:
             self.logger.error(f"Failed to insert content: {str(e)}")
             return False
+    
+    def _clean_generated_content(self, content: str, section_title: str) -> str:
+        """
+        Clean generated content by removing unwanted formatting and duplicate titles.
+        
+        Args:
+            content: Generated content
+            section_title: Title of the section
+            
+        Returns:
+            Cleaned content
+        """
+        # Remove section title if it appears at the start
+        lines = content.split('\n')
+        cleaned_lines = []
+        
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            
+            # Skip if first line contains the section title
+            if i == 0 and section_title.lower() in stripped.lower():
+                self.logger.debug(f"Removing duplicate section title: {stripped}")
+                continue
+            
+            # Skip empty lines at the start
+            if not cleaned_lines and not stripped:
+                continue
+            
+            # Convert bold markdown in lists to plain bullets
+            if stripped.startswith('- **') and stripped.endswith('**'):
+                # Convert "- **text**" to "- text"
+                cleaned_line = '- ' + stripped[4:-2]
+                cleaned_lines.append(cleaned_line)
+            elif stripped.startswith('-'):
+                # Ensure proper bullet format
+                cleaned_lines.append(stripped)
+            else:
+                cleaned_lines.append(line)
+        
+        return '\n'.join(cleaned_lines)
     
     def _split_into_paragraphs(self, content: str) -> List[str]:
         """
